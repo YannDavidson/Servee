@@ -1,0 +1,46 @@
+:root {
+  color-scheme: light;
+  --ink: #111827;
+  --muted: #667085;
+  --surface: #fffaf7;
+  --card: #ffffff;
+  --accent: #ff6f61;
+  --accent-soft: #fff0ec;
+  --border: #eee7e2;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--surface); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+button { font: inherit; }
+.shell { width: min(100%, 760px); min-height: 100vh; margin: 0 auto; padding: 24px 20px 112px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; }
+.wordmark { font-size: 28px; font-weight: 800; letter-spacing: -1.3px; }
+.wordmark span { color: var(--accent); }
+.table-pill, .category, .quiet-button { border: 0; background: transparent; cursor: pointer; }
+.table-pill { padding: 9px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); font-weight: 700; }
+.hero { padding: 42px 0 26px; }
+.eyebrow { margin: 0 0 6px; color: var(--accent); font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin-bottom: 10px; font-size: clamp(36px, 9vw, 58px); line-height: .98; letter-spacing: -2px; }
+.hero > p:last-child, .menu-card p { color: var(--muted); line-height: 1.55; }
+.categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+.category { white-space: nowrap; padding: 10px 15px; border-radius: 999px; color: var(--muted); background: var(--card); border: 1px solid var(--border); }
+.category.active { color: white; background: var(--ink); border-color: var(--ink); }
+.section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding: 34px 0 14px; }
+.section-heading h2 { margin-bottom: 0; font-size: 25px; letter-spacing: -.7px; }
+.quiet-button { color: var(--accent); font-weight: 800; }
+.menu-grid { display: grid; gap: 16px; }
+.menu-card { overflow: hidden; background: var(--card); border: 1px solid var(--border); border-radius: 24px; }
+.dish-art { display: grid; place-items: center; min-height: 164px; background: linear-gradient(135deg, var(--accent-soft), #fff8e7); font-size: 70px; }
+.menu-card-body { position: relative; padding: 19px 68px 22px 19px; }
+.item-row { display: flex; justify-content: space-between; gap: 12px; }
+.item-row h3 { margin-bottom: 8px; font-size: 18px; }
+.item-row strong { white-space: nowrap; }
+.menu-card p { margin-bottom: 0; font-size: 14px; }
+.add-button { position: absolute; right: 18px; bottom: 18px; width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--accent); color: white; font-size: 25px; cursor: pointer; }
+.cart-bar { position: fixed; left: 50%; bottom: 18px; display: flex; justify-content: space-between; width: min(calc(100% - 40px), 720px); transform: translateX(-50%); padding: 17px 20px; border: 0; border-radius: 18px; background: var(--ink); color: white; font-weight: 800; box-shadow: 0 16px 40px rgba(17, 24, 39, .22); cursor: pointer; }
+
+@media (min-width: 680px) {
+  .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .menu-card:first-child { grid-column: span 2; }
+}

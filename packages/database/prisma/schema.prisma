@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  DRAFT
+  SUBMITTED
+  CONFIRMED
+  PREPARING
+  READY
+  SERVED
+  COMPLETED
+  CANCELLED
+}
+
+model Restaurant {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  locations Location[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Location {
+  id           String       @id @default(cuid())
+  name         String
+  restaurantId String
+  restaurant   Restaurant   @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  tables       DiningTable[]
+  menuItems    MenuItem[]
+  orders       Order[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([restaurantId])
+}
+
+model DiningTable {
+  id         String         @id @default(cuid())
+  label      String
+  qrToken    String         @unique
+  locationId String
+  location   Location       @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  sessions   TableSession[]
+
+  @@unique([locationId, label])
+}
+
+model TableSession {
+  id        String      @id @default(cuid())
+  tableId   String
+  table     DiningTable @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  orders    Order[]
+  openedAt  DateTime    @default(now())
+  closedAt  DateTime?
+
+  @@index([tableId, closedAt])
+}
+
+model MenuItem {
+  id          String      @id @default(cuid())
+  locationId  String
+  location    Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  name        String
+  description String
+  priceCents  Int
+  category    String
+  imageUrl    String?
+  isAvailable Boolean     @default(true)
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([locationId, category])
+}
+
+model Order {
+  id             String         @id @default(cuid())
+  locationId     String
+  location       Location       @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  tableSessionId String
+  tableSession   TableSession   @relation(fields: [tableSessionId], references: [id], onDelete: Cascade)
+  status         OrderStatus    @default(DRAFT)
+  items          OrderItem[]
+  submittedAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([locationId, status])
+  @@index([tableSessionId])
+}
+
+model OrderItem {
+  id            String   @id @default(cuid())
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId    String
+  menuItem      MenuItem @relation(fields: [menuItemId], references: [id])
+  quantity      Int      @default(1)
+  unitPriceCents Int
+  notes         String?
+
+  @@index([orderId])
+}
