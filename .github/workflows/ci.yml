@@ -20,5 +20,14 @@ jobs:
           node-version: 24
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm format
-      - run: pnpm typecheck
+      - name: Typecheck contracts
+        run: pnpm --filter @servee/contracts typecheck
+      - name: Typecheck UI
+        run: pnpm --filter @servee/ui typecheck
+      - name: Validate database
+        run: pnpm --filter @servee/database typecheck
+      - name: Typecheck API
+        run: pnpm --filter @servee/api typecheck
+      - name: Typecheck guest
+        run: pnpm --filter @servee/guest typecheck
       - run: pnpm build
