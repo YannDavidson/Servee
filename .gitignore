@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+.next/
+dist/
+coverage/
+.turbo/
+
+# environment
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+
+# operating systems and editors
+.DS_Store
+.idea/
+.vscode/
+
+# generated database files
+packages/database/prisma/dev.db*
