@@ -58,6 +58,7 @@ model TableSession {
   table     DiningTable @relation(fields: [tableId], references: [id], onDelete: Cascade)
   orders    Order[]
   openedAt  DateTime    @default(now())
+  expiresAt DateTime
   closedAt  DateTime?
 
   @@index([tableId, closedAt])
@@ -82,12 +83,15 @@ model MenuItem {
 
 model Order {
   id             String         @id @default(cuid())
+  publicReference String        @unique
   locationId     String
   location       Location       @relation(fields: [locationId], references: [id], onDelete: Cascade)
   tableSessionId String
   tableSession   TableSession   @relation(fields: [tableSessionId], references: [id], onDelete: Cascade)
   status         OrderStatus    @default(DRAFT)
+  subtotalCents  Int
   items          OrderItem[]
+  events         OrderStatusEvent[]
   submittedAt    DateTime?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -102,9 +106,22 @@ model OrderItem {
   order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   menuItemId    String
   menuItem      MenuItem @relation(fields: [menuItemId], references: [id])
-  quantity      Int      @default(1)
+  itemName      String
+  quantity      Int
   unitPriceCents Int
   notes         String?
 
   @@index([orderId])
+}
+
+model OrderStatusEvent {
+  id        String      @id @default(cuid())
+  orderId   String
+  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fromStatus OrderStatus?
+  toStatus  OrderStatus
+  actorType String
+  createdAt DateTime    @default(now())
+
+  @@index([orderId, createdAt])
 }
