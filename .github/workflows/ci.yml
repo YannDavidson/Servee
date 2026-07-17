@@ -20,6 +20,8 @@ jobs:
           node-version: 24
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm format
+      - name: Generate Prisma client
+        run: pnpm --filter @servee/database build
       - name: Typecheck contracts
         run: pnpm --filter @servee/contracts typecheck
       - name: Typecheck UI
